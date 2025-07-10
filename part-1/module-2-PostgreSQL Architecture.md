@@ -51,5 +51,6 @@
 | Log Files | All server messages including stderr, csvlog, and syslog are logged in log files. |
 | Archive Logs (Optional) | WAL Files which are copied to the archive location. |
 
-<img width="600" height="600" alt="image" src="https://github.com/user-attachments/assets/42edb53f-946e-461a-8179-6af961434d37" />
+<img width="600" height="600" alt="image" src="https://github.com/user-attachments/assets/d16bc461-cbfb-4ae4-995c-b1b28232e4a5" />
+
 
