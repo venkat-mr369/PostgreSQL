@@ -5,9 +5,9 @@ To prepare OS to start Postgre software
 4. yum install -y flex
 5. yum install -y perl
 
-###Above three steps we have to install with super user
+Above three steps we have to install with super user
 
-Create Postgres OS user 
+#### Create Postgres OS user 
 =====================
 sudo useradd -d /home/postgres/ postgres
 sudo passwd postgres 
