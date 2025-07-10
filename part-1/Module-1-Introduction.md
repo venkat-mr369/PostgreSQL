@@ -1,7 +1,3 @@
-Here is the **extracted content from the uploaded PowerPoint file (`Module-1-Intro.pptx`)**:
-
----
-
 ### **Module-1: Introduction to PostgreSQL**
 
 ---
