@@ -43,8 +43,9 @@ Last failed login: Wed Jan  8 04:46:22 UTC 2025 from 109.120.156.57 on ssh:nott
 There were 25 failed login attempts since the last successful login.
 
 
-Extract the software gzip to specific folder
+##### Extract the software gzip to specific folder
 ========================================
+```bash
 To keep extracted software https://www.postgresql.org/ftp/source/ & https://www.postgresql.org/ftp/source/v17.0/
 wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
 mkdir -p /pg_backups/software/v17_0_ver/
@@ -81,7 +82,7 @@ Installed:
   wget-1.21.1-8.el9.x86_64                                                                                                                                       
 
 Complete!
-
+```
 [venkat_gcp369@cassandra-1 ~]$ su postgres
 Password: 
 [postgres@cassandra-1 venkat_gcp369]$ pwd
