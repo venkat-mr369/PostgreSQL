@@ -9,13 +9,15 @@ Above three steps we have to install with super user
 
 #### Create Postgres OS user 
 =====================
+```bash
 sudo useradd -d /home/postgres/ postgres
 sudo passwd postgres 
-
+```
 Entered_pwd post123
-
+```bash
 sudo cat /etc/passwd |grep postgres
-
+```
+```bash
 [venkat_gcp369@cassandra-1 ~]$ sudo cat /etc/passwd |grep postgres
 postgres:x:1003:1004::/home/postgres/:/bin/bash
 
@@ -28,7 +30,7 @@ mkdir -p /pg_backups
 
 sudo chown -R postgres:postgres /pg_data/
 sudo chown -R postgres:postgres /pg_backups/
-
+```
 
 output:-
 [venkat_gcp369@cassandra-1 ~]$ sudo mkdir -p /pg_backups
@@ -157,9 +159,10 @@ total 0
 /pg_backups/software/v17_0_ver/postgresql-17.0
 ```
 Now Configure, from software location
-
+```bash
 ./configure --prefix=/pg_data/app_repo/postgres/17.0
-
+```
+```bash
 [postgres@cassandra-1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0
 checking build system type... x86_64-pc-linux-gnu
 checking host system type... x86_64-pc-linux-gnu
@@ -174,18 +177,18 @@ checking for cc... no
 configure: error: in `/pg_backups/software/v17_0_ver/postgresql-17.0':
 configure: error: no acceptable C compiler found in $PATH
 See `config.log' for more details
-
+```
 for this reason we have to install below 3 packages with super user 
 
 To prepare OS to start Postgre software
 1. yum install readline-devel 
 2. yum install -y zlib-devel
 3. yum install -y gcc
-
+```bash
 sudo yum install readline-devel zlib-devel gcc
-
+```
 after installing you can configure with postgres user 
-
+```bash
 postgres@cassandra-1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0
 checking build system type... x86_64-pc-linux-gnu
 checking host system type... x86_64-pc-linux-gnu
@@ -252,9 +255,9 @@ configure: error: ICU library not found
 If you have ICU already installed, see config.log for details on the
 failure.  It is possible the compiler isn't looking in the proper directory.
 Use --without-icu to disable ICU support.
-
+```
 ./configure --prefix=/pg_data/app_repo/postgres/17.0 --without-icu
-
+```bash
 postgres@cassandra-1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0 --without-icu
 checking build system type... x86_64-pc-linux-gnu
 checking host system type... x86_64-pc-linux-gnu
@@ -340,7 +343,7 @@ checking for bison... no
 configure: error: bison not found
 
 #error bison not found 
-
+```
 [venkat_gcp369@cassandra-1 postgresql-17.0]$ sudo yum update -y
 
 configure: error: flex not found
