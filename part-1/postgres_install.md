@@ -52,17 +52,18 @@ To keep extracted software https://www.postgresql.org/ftp/source/ & https://www.
 wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
 mkdir -p /pg_backups/software/v17_0_ver/
 cd /pg_backups/software/v17_0_ver/
-
+```
 output:-
+```bash
 [postgres@cassandra-1 ~]$ mkdir -p /pg_backups/software/v17_0_ver/
 [postgres@cassandra-1 ~]$ cd /pg_backups/software/v17_0_ver/
 [postgres@cassandra-1 v17_0_ver]$ pwd
 /pg_backups/software/v17_0_ver]$
-
+```
 To install repository binary folder location
 mkdir -p /pg_data/app_repo/postgres/17.0/
 
-
+```bash
 [postgres@cassandra-1 v17_0_ver]$ wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
 -bash: wget: command not found
 
@@ -344,6 +345,7 @@ configure: error: bison not found
 
 #error bison not found 
 ```
+```bash
 [venkat_gcp369@cassandra-1 postgresql-17.0]$ sudo yum update -y
 
 configure: error: flex not found
@@ -363,9 +365,7 @@ then again configure it willget success
 
 make -- this will take some time 
 make install 
-
-
-
+```bash
 ==========================
 yum install readline-devel
 yum install -y zlib-devel
@@ -392,14 +392,15 @@ tar -xvf /pg_backup/software/postgresql-10.15.tar.gz   /pg_backup/software/v17_
 cd /pg_backups/software/v17_0_ver/postgresql-17.0
 
 ./configure --prefix=/pg_data/app_repo/postgres/17.0 --without-icu 
-
+```
+```bash
 make 
 make install 
 
 cd /pg_data/app_repo/postgres/17.0/bin$./initdb -D /pg_data/cluster1
 cd /pg_data/app_repo/postgres/17.0/bin$./pg_ctl -D /pg_data/cluster1 -l logfile start
 cd /pg_data/app_repo/postgres/17.0/bin$./pg_ctl -D /pg_data/cluster1 -l logfile status
-
+```
 
 ================================
 
