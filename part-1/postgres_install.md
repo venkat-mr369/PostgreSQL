@@ -83,6 +83,7 @@ Installed:
 
 Complete!
 ```
+```bash
 [venkat_gcp369@cassandra-1 ~]$ su postgres
 Password: 
 [postgres@cassandra-1 venkat_gcp369]$ pwd
@@ -90,8 +91,9 @@ Password:
 [postgres@cassandra-1 venkat_gcp369]$ cd /pg_backups/software/v17_0_ver/
 [postgres@cassandra-1 v17_0_ver]$ pwd
 /pg_backups/software/v17_0_ver
-
+```
 To install repository software folder location
+```bash
 mkdir -p /pg_data/postgres/17.0/
 [postgres@cassandra-1 v17_0_ver]$ wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
 --2025-01-08 08:51:59--  https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
@@ -104,7 +106,8 @@ Saving to: ‘postgresql-17.0.tar.gz’
 postgresql-17.0.tar.gz                   100%[===============================================================================>]  26.57M  18.9MB/s    in 1.4s    
 
 2025-01-08 08:52:01 (18.9 MB/s) - ‘postgresql-17.0.tar.gz’ saved [27865263/27865263]
-
+```
+```bash
 [postgres@cassandra-1 v17_0_ver]$ ls -l
 total 27216
 -rw-r--r--. 1 postgres postgres 27865263 Sep 23 20:05 postgresql-17.0.tar.gz
@@ -118,13 +121,13 @@ tar -xvf /pg_backup/software/postgresql-10.15.tar.gz   /pg_backup/software/v17_
 total 27220
 drwxr-xr-x. 6 postgres postgres     4096 Sep 23 20:02 postgresql-17.0
 -rw-r--r--. 1 postgres postgres 27865263 Sep 23 20:05 postgresql-17.0.tar.gz
-
+```
 Install respository software to particular location
 =============================
 go to extracted folder
 /pg_backups/software/v17_0_ver
 cd postgresql-17.0
-
+```bash
 Now configure 
 ./configure --prefix=/pg_data/app_repo/postgres/17.0/
 run the make and make install
@@ -138,9 +141,9 @@ run the make and make install
 
 make is not installed, need to install with super user 
 [venkat_gcp369@cassandra-1 ~]$ sudo yum install make -y
-
+```
 after installing make switch to posgres user
-
+```bash
 
 [venkat_gcp369@cassandra-1 ~]$ su - postgres
 Password: 
@@ -152,7 +155,7 @@ total 0
 [postgres@cassandra-1 v17_0_ver]$ cd 
 [postgres@cassandra-1 postgresql-17.0]$ pwd
 /pg_backups/software/v17_0_ver/postgresql-17.0
-
+```
 Now Configure, from software location
 
 ./configure --prefix=/pg_data/app_repo/postgres/17.0
