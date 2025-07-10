@@ -49,6 +49,9 @@ Here is the **extracted content from the uploaded PowerPoint file (`Module-1-Int
 
 #### **PostgreSQL Limits**
 
+<img width="2401" height="980" alt="image" src="https://github.com/user-attachments/assets/ca4e0736-de81-4013-946e-c9de1141a56f" />
+
+
 
 
 ---
