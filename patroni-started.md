@@ -66,7 +66,7 @@ sudo chown -R postgres:postgres /var/lib/pgsql /etc/patroni
 
 ---
 
-# 3) Install and configure **etcd** quorum (on **101–103 only**)
+## 3) Install and configure **etcd** quorum (on **101–103 only**)
 
 Patroni needs a reliable DCS. We’ll run an etcd cluster across the 3 DB nodes. (3 members gives stable quorum.) ([Patroni][2])
 
@@ -119,7 +119,7 @@ etcdctl --endpoints="http://10.10.100.101:2379,http://10.10.100.102:2379,http://
 
 ---
 
-# 4) Patroni configuration (on **101–103**)
+## 4) Patroni configuration (on **101–103**)
 
 Create a **node-specific** `/etc/patroni/patroni.yml` on each DB node. Patroni will handle `initdb`, replication users, and failover. ([Patroni][3])
 
@@ -259,7 +259,7 @@ sudo chown postgres:postgres /etc/patroni/patroni.yml
 
 ---
 
-# 5) Systemd unit for Patroni (on **101–103**)
+## 5) Systemd unit for Patroni (on **101–103**)
 
 ```bash
 sudo bash -c 'cat >/etc/systemd/system/patroni.service' <<'EOF'
@@ -286,7 +286,7 @@ sudo systemctl enable patroni
 
 ---
 
-# 6) Bootstrap the cluster (on **101–103**)
+## 6) Bootstrap the cluster (on **101–103**)
 
 Start Patroni on the first node; it will **initdb** and become **primary**. Start others to join as replicas. ([Patroni][3])
 
@@ -312,7 +312,7 @@ patronictl -c /etc/patroni/patroni.yml list
 
 ---
 
-# 7) HAProxy on **oel9-vm4 (10.10.100.104)**
+## 7) HAProxy on **oel9-vm4 (10.10.100.104)**
 
 We’ll point clients to HAProxy (port 5000). HAProxy will health-check Patroni’s REST API **/primary** and send writes to the current primary. (Older checks used `/master`; Patroni REST exposes role endpoints.) ([Patroni][3])
 
@@ -352,7 +352,7 @@ sudo systemctl enable --now haproxy
 
 ---
 
-# 8) Test
+## 8) Test
 
 ```bash
 # From any client/VM with psql installed
