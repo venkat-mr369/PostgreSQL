@@ -55,7 +55,7 @@ firewall-cmd --reload
 echo "Common setup complete on $MYNAME ($MYPIP)"
 ```
 
-**Usage on each VM**:
+**Copy this file to /scripts folder and execute like below on every VM**:
 
 ```bash
 # On oel9-vm1 (101)
