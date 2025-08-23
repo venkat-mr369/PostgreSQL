@@ -9,7 +9,7 @@ Patroni manages PostgreSQL HA and needs a **Distributed Configuration Store (DCS
 
 ---
 
-# 1) System prep (run on **all 4 VMs**)
+## 1) System prep (run on **all 4 VMs**)
 
 ```bash
 # Hostnames (run the matching line on each VM)
@@ -42,7 +42,7 @@ sudo firewall-cmd --reload
 
 ---
 
-# 2) Install PostgreSQL 16 + Patroni (on **101–103 only**)
+## 2) Install PostgreSQL 16 + Patroni (on **101–103 only**)
 
 Patroni can be installed via `pip`; we’ll use PGDG for Postgres 16. ([Patroni][2])
 
