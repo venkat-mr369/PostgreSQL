@@ -2,20 +2,21 @@
 To prepare OS to start Postgre software
 
 ***Readline is used by psql (Postgres client) for command-line editing, history, and navigation.***
+----
 yum install -y readline-devel  
-
+---
 ***zlib provides compression support (used by pg_dump, WAL compression, TOAST, etc.).***
 yum install -y zlib-devel  
-
+----
 ***gcc is required to compile PostgreSQL source code (C compiler).***
 yum install -y gcc  
-
+---
 ***flex is required for building the SQL parser and scanner (lexical analysis).***
 yum install -y flex  
-
+----
 ***perl is needed for building certain PostgreSQL tools, regression tests,and some extensions (e.g., PL/Perl procedural language support).***
 yum install -y perl  
-
+----
 --- steps below 
 1. yum install readline-devel
 2. yum install -y zlib-devel
