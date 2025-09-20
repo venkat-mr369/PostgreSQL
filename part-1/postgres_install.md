@@ -9,9 +9,11 @@ yum install -y readline-devel
 yum install -y zlib-devel  
 ----
 ***gcc is required to compile PostgreSQL source code (C compiler).***
+---
 yum install -y gcc  
 ---
 ***flex is required for building the SQL parser and scanner (lexical analysis).***
+---
 yum install -y flex  
 ----
 ***perl is needed for building certain PostgreSQL tools, regression tests,and some extensions (e.g., PL/Perl procedural language support).***
