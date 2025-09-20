@@ -1,7 +1,7 @@
 #### Tar Ball Installation, DBA's has to prepare all manually User Create / Mount points Create ...etc
 To prepare OS to start Postgre software
 
-***Readline is used by psql (Postgres client) for command-line editing, history, and navigation.***
+****Readline is used by psql (Postgres client) for command-line editing, history, and navigation.****
 ----
 yum install -y readline-devel  
 ---
