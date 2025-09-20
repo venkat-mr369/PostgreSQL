@@ -1,9 +1,30 @@
+#### Tar Ball Installation, DBA's has to prepare all manually User Create / Mount points Create ...etc
 To prepare OS to start Postgre software
+# Readline is used by psql (Postgres client) for command-line editing, history, and navigation.
+yum install -y readline-devel  
+
+# zlib provides compression support (used by pg_dump, WAL compression, TOAST, etc.).
+yum install -y zlib-devel  
+
+# gcc is required to compile PostgreSQL source code (C compiler).
+yum install -y gcc  
+
+# flex is required for building the SQL parser and scanner (lexical analysis).
+yum install -y flex  
+
+# perl is needed for building certain PostgreSQL tools, regression tests, 
+# and some extensions (e.g., PL/Perl procedural language support).
+yum install -y perl  
+
+
+--- steps below 
 1. yum install readline-devel
 2. yum install -y zlib-devel
 3. yum install -y gcc
 4. yum install -y flex
 5. yum install -y perl
+
+
 
 Above three steps we have to install with super user
 
@@ -18,28 +39,28 @@ Entered_pwd post123
 sudo cat /etc/passwd |grep postgres
 ```
 ```bash
-[venkat_gcp369@cassandra-1 ~]$ sudo cat /etc/passwd |grep postgres
+[venkat_gcp369@venkat-servr1 ~]$ sudo cat /etc/passwd |grep postgres
 postgres:x:1003:1004::/home/postgres/:/bin/bash
 
 mkdir -p /pg_data
 mkdir -p /pg_backups
 
-[venkat_gcp369@cassandra-1 ~]$ sudo mkdir -p /pg_backups
-[venkat_gcp369@cassandra-1 ~]$ sudo mkdir -p /pg_data
-[venkat_gcp369@cassandra-1 ~]$ 
+[venkat_gcp369@venkat-servr1 ~]$ sudo mkdir -p /pg_backups
+[venkat_gcp369@venkat-servr1 ~]$ sudo mkdir -p /pg_data
+[venkat_gcp369@venkat-servr1 ~]$ 
 
 sudo chown -R postgres:postgres /pg_data/
 sudo chown -R postgres:postgres /pg_backups/
 ```
 
 output:-
-[venkat_gcp369@cassandra-1 ~]$ sudo mkdir -p /pg_backups
-[venkat_gcp369@cassandra-1 ~]$ sudo mkdir -p /pg_data
-[venkat_gcp369@cassandra-1 ~]$ sudo chown -R postgres:postgres /pg_data/
-[venkat_gcp369@cassandra-1 ~]$ sudo chown -R postgres:postgres /pg_backups/
-[venkat_gcp369@cassandra-1 ~]$ 
+[venkat_gcp369@venkat-servr1 ~]$ sudo mkdir -p /pg_backups
+[venkat_gcp369@venkat-servr1 ~]$ sudo mkdir -p /pg_data
+[venkat_gcp369@venkat-servr1 ~]$ sudo chown -R postgres:postgres /pg_data/
+[venkat_gcp369@venkat-servr1 ~]$ sudo chown -R postgres:postgres /pg_backups/
+[venkat_gcp369@venkat-servr1 ~]$ 
 
-[venkat_gcp369@cassandra-1 ~]$ su - postgres
+[venkat_gcp369@venkat-servr1 ~]$ su - postgres
 Password: 
 Last failed login: Wed Jan  8 04:46:22 UTC 2025 from 109.120.156.57 on ssh:notty
 There were 25 failed login attempts since the last successful login.
@@ -55,19 +76,19 @@ cd /pg_backups/software/v17_0_ver/
 ```
 output:-
 ```bash
-[postgres@cassandra-1 ~]$ mkdir -p /pg_backups/software/v17_0_ver/
-[postgres@cassandra-1 ~]$ cd /pg_backups/software/v17_0_ver/
-[postgres@cassandra-1 v17_0_ver]$ pwd
+[postgres@venkat-servr1 ~]$ mkdir -p /pg_backups/software/v17_0_ver/
+[postgres@venkat-servr1 ~]$ cd /pg_backups/software/v17_0_ver/
+[postgres@venkat-servr1 v17_0_ver]$ pwd
 /pg_backups/software/v17_0_ver]$
 ```
 To install repository binary folder location
 mkdir -p /pg_data/app_repo/postgres/17.0/
 
 ```bash
-[postgres@cassandra-1 v17_0_ver]$ wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
+[postgres@venkat-servr1 v17_0_ver]$ wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
 -bash: wget: command not found
 
-[venkat_gcp369@cassandra-1 ~]$ sudo yum install wget -y
+[venkat_gcp369@venkat-servr1 ~]$ sudo yum install wget -y
 Last metadata expiration check: 1:07:36 ago on Wed 08 Jan 2025 07:41:46 AM UTC.
 ...
 ...   
@@ -87,18 +108,18 @@ Installed:
 Complete!
 ```
 ```bash
-[venkat_gcp369@cassandra-1 ~]$ su postgres
+[venkat_gcp369@venkat-servr1 ~]$ su postgres
 Password: 
-[postgres@cassandra-1 venkat_gcp369]$ pwd
+[postgres@venkat-servr1 venkat_gcp369]$ pwd
 /home/venkat_gcp369
-[postgres@cassandra-1 venkat_gcp369]$ cd /pg_backups/software/v17_0_ver/
-[postgres@cassandra-1 v17_0_ver]$ pwd
+[postgres@venkat-servr1 venkat_gcp369]$ cd /pg_backups/software/v17_0_ver/
+[postgres@venkat-servr1 v17_0_ver]$ pwd
 /pg_backups/software/v17_0_ver
 ```
 To install repository software folder location
 ```bash
 mkdir -p /pg_data/postgres/17.0/
-[postgres@cassandra-1 v17_0_ver]$ wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
+[postgres@venkat-servr1 v17_0_ver]$ wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
 --2025-01-08 08:51:59--  https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
 Resolving ftp.postgresql.org (ftp.postgresql.org)... 147.75.85.69, 217.196.149.55, 72.32.157.246, ...
 Connecting to ftp.postgresql.org (ftp.postgresql.org)|147.75.85.69|:443... connected.
@@ -111,16 +132,16 @@ postgresql-17.0.tar.gz                   100%[=========================
 2025-01-08 08:52:01 (18.9 MB/s) - ‘postgresql-17.0.tar.gz’ saved [27865263/27865263]
 ```
 ```bash
-[postgres@cassandra-1 v17_0_ver]$ ls -l
+[postgres@venkat-servr1 v17_0_ver]$ ls -l
 total 27216
 -rw-r--r--. 1 postgres postgres 27865263 Sep 23 20:05 postgresql-17.0.tar.gz
 
 Extract gzip file to software folder
 tar -xvf /pg_backup/software/postgresql-10.15.tar.gz   /pg_backup/software/v17_0_ver/
 
-[postgres@cassandra-1 v17_0_ver]$ pwd
+[postgres@venkat-servr1 v17_0_ver]$ pwd
 /pg_backups/software/v17_0_ver
-[postgres@cassandra-1 v17_0_ver]$ ls -ll
+[postgres@venkat-servr1 v17_0_ver]$ ls -ll
 total 27220
 drwxr-xr-x. 6 postgres postgres     4096 Sep 23 20:02 postgresql-17.0
 -rw-r--r--. 1 postgres postgres 27865263 Sep 23 20:05 postgresql-17.0.tar.gz
@@ -139,24 +160,24 @@ run the make and make install
 
 **Note --- only one Repository on one server
 
-[postgres@cassandra-1 postgresql-17.0]$ make
+[postgres@venkat-servr1 postgresql-17.0]$ make
 -bash: make: command not found
 
 make is not installed, need to install with super user 
-[venkat_gcp369@cassandra-1 ~]$ sudo yum install make -y
+[venkat_gcp369@venkat-servr1 ~]$ sudo yum install make -y
 ```
 after installing make switch to posgres user
 ```bash
 
-[venkat_gcp369@cassandra-1 ~]$ su - postgres
+[venkat_gcp369@venkat-servr1 ~]$ su - postgres
 Password: 
 Last login: Wed Jan  8 09:10:21 UTC 2025 on pts/1
-[postgres@cassandra-1 ~]$ ls -lrt
+[postgres@venkat-servr1 ~]$ ls -lrt
 total 0
-[postgres@cassandra-1 ~]$ cd /pg_backups/software/v17_0_ver/postgresql-17.0
+[postgres@venkat-servr1 ~]$ cd /pg_backups/software/v17_0_ver/postgresql-17.0
 
-[postgres@cassandra-1 v17_0_ver]$ cd 
-[postgres@cassandra-1 postgresql-17.0]$ pwd
+[postgres@venkat-servr1 v17_0_ver]$ cd 
+[postgres@venkat-servr1 postgresql-17.0]$ pwd
 /pg_backups/software/v17_0_ver/postgresql-17.0
 ```
 Now Configure, from software location
@@ -164,7 +185,7 @@ Now Configure, from software location
 ./configure --prefix=/pg_data/app_repo/postgres/17.0
 ```
 ```bash
-[postgres@cassandra-1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0
+[postgres@venkat-servr1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0
 checking build system type... x86_64-pc-linux-gnu
 checking host system type... x86_64-pc-linux-gnu
 checking which template to use... linux
@@ -190,7 +211,7 @@ sudo yum install readline-devel zlib-devel gcc
 ```
 after installing you can configure with postgres user 
 ```bash
-postgres@cassandra-1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0
+postgres@venkat-servr1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0
 checking build system type... x86_64-pc-linux-gnu
 checking host system type... x86_64-pc-linux-gnu
 checking which template to use... linux
@@ -259,7 +280,7 @@ Use --without-icu to disable ICU support.
 ```
 ./configure --prefix=/pg_data/app_repo/postgres/17.0 --without-icu
 ```bash
-postgres@cassandra-1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0 --without-icu
+postgres@venkat-servr1 postgresql-17.0]$ ./configure --prefix=/pg_data/app_repo/postgres/17.0 --without-icu
 checking build system type... x86_64-pc-linux-gnu
 checking host system type... x86_64-pc-linux-gnu
 checking which template to use... linux
@@ -346,7 +367,7 @@ configure: error: bison not found
 #error bison not found 
 ```
 ```bash
-[venkat_gcp369@cassandra-1 postgresql-17.0]$ sudo yum update -y
+[venkat_gcp369@venkat-servr1 postgresql-17.0]$ sudo yum update -y
 
 configure: error: flex not found
 
