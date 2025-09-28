@@ -42,7 +42,7 @@
 
 ---
 
-# 🔎 Example with Employees Table
+### 🔎 Example with Employees Table
 
 * **You connect:**
 
@@ -65,7 +65,7 @@
 
 ---
 
-# 📊 Key Difference: Postmaster vs Postgres Processes
+### 📊 Key Difference: Postmaster vs Postgres Processes
 
 | Component                | Role                                                                                                 |
 | ------------------------ | ---------------------------------------------------------------------------------------------------- |
@@ -75,22 +75,22 @@
 
 ---
 
-# 🧠 Interview-Ready Answer
+### 🧠 Interview-Ready Answer
 
 > “The postmaster is the main PostgreSQL server process. It starts when the database is launched, reads configs, initializes shared memory, and spawns background processes. It listens for client connections on port 5432, and for each connection it forks a backend process to handle that session. Postmaster also supervises child processes and restarts them if they crash. In short, it is the parent process that keeps PostgreSQL alive and orchestrates everything.”
 
 ---
-Perfect 👍 — let me draw you a **PostgreSQL process tree diagram** showing the **Postmaster, background processes, and backend processes**.
+ **PostgreSQL process tree diagram** showing the **Postmaster, background processes, and backend processes**.
 
 ---
 
-# 🌳 PostgreSQL Process Tree
+#### 🌳 PostgreSQL Process Tree
 
 ```
 (postmaster)  ── Main PostgreSQL Server Process
      │
      ├── checkpointer        (flushes dirty pages at checkpoints)
-     ├── background writer   (writes dirty pages gradually to avoid spikes)
+     ├── background writer   (writes dirty pages gradually to avoid spikes{Oracle -DBWriter})
      ├── wal writer          (flushes WAL records to disk)
      ├── autovacuum launcher (spawns workers to vacuum tables)
      ├── stats collector     (collects statistics for planner)
@@ -101,6 +101,32 @@ Perfect 👍 — let me draw you a **PostgreSQL process tree diagram** showing t
      ├── (postgres backend 2) ─ handles Client Connection #2
      └── (postgres backend N) ─ handles Client Connection #N
 ```
+Here is a comparison of major PostgreSQL background processes and their counterparts in Oracle Database. Both systems use specialized background tasks to guarantee performance, durability, maintenance, and scalability, but names and internals differ slightly.
+
+### PostgreSQL vs. Oracle Background Processes
+
+| PostgreSQL Process             | Purpose/Function                                           | Oracle Counterpart & Description                        |
+|-------------------------------|-----------------------------------------------------------|---------------------------------------------------------|
+| **Checkpointer**              | Flushes dirty pages at checkpoints to disk[1][2].| **CKPT (Checkpoint Process):** Signals DB Writer to flush buffers; records synchronization marks in control/datafiles[3][4].|
+| **Background Writer**         | Gradually writes dirty pages to disk between checkpoints; reduces checkpoint spikes[5][1].| **DBWR (Database Writer):** Writes dirty blocks from buffer cache to disk; aims to avoid I/O spikes and respond to buffer needs[6][7][8].|
+| **WAL Writer**                | Flushes WAL changes to the disk for durability and crash recovery[9][10].| **LGWR (Log Writer):** Writes redo log buffer to online redo logs to guarantee transaction durability[4][7][8].|
+| **Autovacuum Launcher**       | Spawns autovacuum workers to remove dead tuples, freeing space and updating stats[10].| **SMON (System Monitor):** Performs instance recovery, cleans temporary segments, and space management[11][8].|
+| **Stats Collector**           | Collects table and query statistics for query planner optimization[10].| **AWR (Automatic Workload Repository)/Statistical Views:** Oracle collects stats via various views, mainly using AWR snapshots, V$ views, and the optimizer’s own statistics[12][4].|
+| **Archiver**                  | Archives WAL segments when archive_mode is enabled; ensures disaster recovery[10].| **ARCH (Archiver Process):** Copies filled redo logs to archive destinations for backup and recoverability[11][8].|
+| **Logical Replication Launcher** | Manages publications and subscriptions for logical replication changes[10].| **Streams/APPLY/PROPAGATE:** Oracle has Streams (and newer options like GoldenGate) for logical replication, managing publications and subscriptions of changes across databases[12][4].|
+
+---
+
+| PostgreSQL Process                | Description                                          | Oracle Counterpart         | Oracle Description                                        |
+|-----------------------------------|------------------------------------------------------|----------------------------|-----------------------------------------------------------|
+| Checkpointer                      | Flushes dirty pages at checkpoints, syncs WAL/data   | CKPT (Checkpoint)          | Updates data file headers; signals DBWR for disk writes   |
+| Background Writer                 | Gradually writes dirty pages, avoids I/O spikes      | DBWR (Database Writer)     | Periodically writes dirty buffers to disk                 |
+| WAL Writer                        | Flushes WAL records for durability/recovery          | LGWR (Log Writer)          | Writes redo log buffers to disk for crash recovery        |
+| Autovacuum Launcher               | Launches workers to vacuum tables & reclaim space    | SMON (System Monitor)      | Runs instance recovery, cleans temp/persisted segments    |
+| Stats Collector                   | Collects planner statistics                          | AWR/Stats Gathering        | Database gathers statistics for optimizer via AWR/snapshots|
+| Archiver                          | Archives WAL segments (archive_mode=on)              | ARCH (Archiver)            | Archives redo logs for recovery / backup                  |
+| Logical Replication Launcher      | Manages publications/subscriptions for replication   | Streams, Goldengate, etc.  | Handles logical replication, propagates changes           |
+
 
 ---
 
