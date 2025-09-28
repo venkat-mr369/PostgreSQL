@@ -1,10 +1,8 @@
 *“What happens if a PostgreSQL background process is killed?”*
 
-Let’s go step by step.
-
 ---
 
-# 🔑 Background Processes in PostgreSQL
+### 🔑 Background Processes in PostgreSQL
 
 Postgres runs many **background processes** (in addition to user backends):
 
@@ -17,7 +15,7 @@ Postgres runs many **background processes** (in addition to user backends):
 
 ---
 
-# 🔎 What happens if they are killed?
+### 🔎 What happens if they are killed?
 
 ### 1. **checkpointer**
 
