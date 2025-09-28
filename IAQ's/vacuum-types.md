@@ -1,4 +1,4 @@
-PostgreSQL provides several types of vacuum processes to manage database bloat, reclaim space, and maintain transaction integrity. Here are the main vacuum types:
+***PostgreSQL provides several types of vacuum processes to manage database bloat, reclaim space, and maintain transaction integrity. Here are the main vacuum types:***
 
 ### List of Vacuum Types
 
