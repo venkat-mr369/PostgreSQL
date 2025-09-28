@@ -107,13 +107,13 @@ Here is a comparison of major PostgreSQL background processes and their counterp
 
 | PostgreSQL Process             | Purpose/Function                                           | Oracle Counterpart & Description                        |
 |-------------------------------|-----------------------------------------------------------|---------------------------------------------------------|
-| **Checkpointer**              | Flushes dirty pages at checkpoints to disk[1][2].| **CKPT (Checkpoint Process):** Signals DB Writer to flush buffers; records synchronization marks in control/datafiles[3][4].|
-| **Background Writer**         | Gradually writes dirty pages to disk between checkpoints; reduces checkpoint spikes[5][1].| **DBWR (Database Writer):** Writes dirty blocks from buffer cache to disk; aims to avoid I/O spikes and respond to buffer needs[6][7][8].|
-| **WAL Writer**                | Flushes WAL changes to the disk for durability and crash recovery[9][10].| **LGWR (Log Writer):** Writes redo log buffer to online redo logs to guarantee transaction durability[4][7][8].|
-| **Autovacuum Launcher**       | Spawns autovacuum workers to remove dead tuples, freeing space and updating stats[10].| **SMON (System Monitor):** Performs instance recovery, cleans temporary segments, and space management[11][8].|
-| **Stats Collector**           | Collects table and query statistics for query planner optimization[10].| **AWR (Automatic Workload Repository)/Statistical Views:** Oracle collects stats via various views, mainly using AWR snapshots, V$ views, and the optimizer’s own statistics[12][4].|
-| **Archiver**                  | Archives WAL segments when archive_mode is enabled; ensures disaster recovery[10].| **ARCH (Archiver Process):** Copies filled redo logs to archive destinations for backup and recoverability[11][8].|
-| **Logical Replication Launcher** | Manages publications and subscriptions for logical replication changes[10].| **Streams/APPLY/PROPAGATE:** Oracle has Streams (and newer options like GoldenGate) for logical replication, managing publications and subscriptions of changes across databases[12][4].|
+| **Checkpointer**              | Flushes dirty pages at checkpoints to disk.| **CKPT (Checkpoint Process):** Signals DB Writer to flush buffers; records synchronization marks in control/datafiles.|
+| **Background Writer**         | Gradually writes dirty pages to disk between checkpoints; reduces checkpoint spikes[5][1].| **DBWR (Database Writer):** Writes dirty blocks from buffer cache to disk; aims to avoid I/O spikes and respond to buffer needs.|
+| **WAL Writer**                | Flushes WAL changes to the disk for durability and crash recovery.| **LGWR (Log Writer):** Writes redo log buffer to online redo logs to guarantee transaction durability.|
+| **Autovacuum Launcher**       | Spawns autovacuum workers to remove dead tuples, freeing space and updating stats[10].| **SMON (System Monitor):** Performs instance recovery, cleans temporary segments, and space management.|
+| **Stats Collector**           | Collects table and query statistics for query planner optimization.| **AWR (Automatic Workload Repository)/Statistical Views:** Oracle collects stats via various views, mainly using AWR snapshots, V$ views, and the optimizer’s own statistics.|
+| **Archiver**                  | Archives WAL segments when archive_mode is enabled; ensures disaster recovery.| **ARCH (Archiver Process):** Copies filled redo logs to archive destinations for backup and recoverability.|
+| **Logical Replication Launcher** | Manages publications and subscriptions for logical replication changes.| **Streams/APPLY/PROPAGATE:** Oracle has Streams (and newer options like GoldenGate) for logical replication, managing publications and subscriptions of changes across databases.|
 
 ---
 
