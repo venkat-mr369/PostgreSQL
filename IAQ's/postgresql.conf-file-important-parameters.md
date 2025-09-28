@@ -1,7 +1,7 @@
-Perfect 👍 Venkat — in **production PostgreSQL**, `postgresql.conf` tuning is **critical for performance and stability**.
+ **production PostgreSQL**, `postgresql.conf` tuning is **critical for performance and stability**.
 In interviews, they expect you to **list the most important parameters** and explain why they matter.
 
-Here’s a **structured list (grouped by category)** with explanations & example values (for a medium/high workload prod system).
+Here’s a **structured Checklist ** with explanations & example values (for a medium/high workload prod system).
 
 ---
 
