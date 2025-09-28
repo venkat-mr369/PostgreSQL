@@ -1,0 +1,118 @@
+ **3-node HA cluster** (Node1 = Primary, Node2 & Node3 = Standbys).
+This is very common in **Patroni / Streaming replication** clusters.
+
+---
+
+# 🌳 PostgreSQL HA with `pg_rewind` (3 Nodes)
+
+---
+
+### **Step 1: Normal Operation**
+
+```
+                   WAL Streaming
+ ┌───────────────┐   =========>   ┌───────────────┐
+ │   Node1       │                │   Node2       │
+ │   Primary     │   =========>   │   Standby     │
+ │ (10.0.0.1)    │   WAL Streaming│ (10.0.0.2)    │
+ └───────────────┘                └───────────────┘
+                         =========>
+                         WAL Streaming
+                         ┌───────────────┐
+                         │   Node3       │
+                         │   Standby     │
+                         │ (10.0.0.3)    │
+                         └───────────────┘
+```
+
+✅ Node1 writes → Node2 & Node3 replicate WAL.
+
+---
+
+### **Step 2: Failover (Node1 Crashes)**
+
+```
+ ┌───────────────┐
+ │   Node1       │
+ │   Crashed     │
+ │ Diverged WAL  │
+ └───────────────┘
+
+ Promote Node2
+ ┌───────────────┐                ┌───────────────┐
+ │   Node2       │   =========>   │   Node3       │
+ │   NEW Primary │   WAL Streaming│   Standby     │
+ │ (10.0.0.2)    │                │ (10.0.0.3)    │
+ └───────────────┘                └───────────────┘
+```
+
+✅ Node2 is promoted → new Primary.
+✅ Node3 keeps following Node2.
+❌ Node1 is out of sync (diverged WAL).
+
+---
+
+### **Step 3: Rewind Old Primary (Node1)**
+
+On Node1:
+
+```bash
+pg_ctl stop -D /var/lib/pgsql/17/data
+
+pg_rewind \
+  --target-pgdata=/var/lib/pgsql/17/data \
+  --source-server="host=10.0.0.2 dbname=postgres user=replicator password=xxx"
+
+pg_ctl start -D /var/lib/pgsql/17/data
+```
+
+✅ Node1 is now rewound using Node2’s state.
+
+---
+
+### **Step 4: Node1 Rejoins as Standby**
+
+```
+ ┌───────────────┐
+ │   Node2       │   =========>   ┌───────────────┐
+ │   Primary     │   WAL Streaming│   Node1       │
+ │ (10.0.0.2)    │   =========>   │   Standby     │
+ └───────────────┘                │ (10.0.0.1)    │
+                                   └───────────────┘
+
+                ┌───────────────┐
+                │   Node3       │
+                │   Standby     │
+                │ (10.0.0.3)    │
+                └───────────────┘
+```
+
+✅ Cluster is healthy: Node2 = Primary, Node1 + Node3 = Standbys.
+
+---
+
+# 🔑 Extensions After Migration (14 → 17)
+
+On **all 3 nodes**:
+
+1. Install contrib packages:
+
+   ```bash
+   sudo dnf install -y postgresql17-contrib
+   ```
+2. Recreate extension in the migrated DB:
+
+   ```sql
+   CREATE EXTENSION pg_stat_statements;
+   CREATE EXTENSION pgcrypto;
+   ```
+
+✅ Ensures extension availability across cluster.
+
+---
+
+# 🧠 Interview-Ready Answer
+
+> “In a 3-node HA setup, say Node1 is primary and Node2/Node3 are standbys. If Node1 crashes and Node2 is promoted, Node1 diverges. Instead of recloning Node1, I run `pg_rewind` pointing it to Node2, which rewinds only the differences. Node1 then rejoins as standby. After a major version migration (14 → 17), I also make sure contrib packages are installed on all nodes and recreate extensions like `pg_stat_statements` so that cluster-wide consistency is maintained.”
+
+---
