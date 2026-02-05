@@ -1,4 +1,4 @@
-Perfect 👍 let’s use your **employee salary** example so it’s clearer.
+use your **employee salary** example so it’s clearer.
 We’ll use a simple `employees` table:
 
 | name   | salary |
@@ -72,7 +72,7 @@ Think of salaries as **salary slips**:
 * When HR commits → the new slip becomes official, old one is kept for history (until cleaned).
 
 ---
-Great 🚀 Short Demo **step-by-step MVCC demo with salaries** in PostgreSQL.
+Demo **step-by-step MVCC demo with salaries** in PostgreSQL.
 You can copy–paste these commands into **two separate sessions** (say, two `psql` terminals).
 
 ---
@@ -177,7 +177,7 @@ SELECT * FROM employees;
 
 ---
 #### Now what happens if both HR and Auditor try to update Meena’s salary at the same time (to show how MVCC handles conflicts)
-Perfect 👍 Let’s extend our **MVCC demo with conflicts** using the same `employees` table.
+Let’s extend our **MVCC demo with conflicts** using the same `employees` table.
 This time both **HR (Session 1)** and **Auditor (Session 2)** will try to update **Meena’s salary** at the same time.
 
 ---
@@ -267,7 +267,7 @@ SELECT * FROM employees;
 
 ⚡ Question ? You Can **what happens if Session 1 ROLLBACKS instead of COMMIT** (so you see how MVCC discards the uncommitted version)?
 
-Great 👍 let’s continue with the **ROLLBACK case** so you see how MVCC safely discards uncommitted changes.
+let’s continue with the **ROLLBACK case** so you see how MVCC safely discards uncommitted changes.
 
 We’ll use the same table:
 
