@@ -1,4 +1,4 @@
-# **MVCC (Multi-Version Concurrency Control) in PostgreSQL – Detailed Notes & SQL Queries**  
+## **MVCC (Multi-Version Concurrency Control) in PostgreSQL – Detailed Notes & SQL Queries**  
 
 ## **📌 1. What is MVCC in PostgreSQL?**  
 **MVCC (Multi-Version Concurrency Control)** is a **concurrency control mechanism** that allows multiple transactions to access the database **without waiting for locks**. Instead of blocking other transactions, MVCC **creates multiple versions of a row** and ensures data consistency using transaction snapshots.  
@@ -368,7 +368,7 @@ SELECT * FROM pg_stat_activity WHERE state = 'active';
 - **Fix deadlocks by ensuring transactions acquire locks in a consistent order.**  
 - **Use `FOR UPDATE` locks and keep transactions short to minimize risk.**  
 
-**hands-on lab for deadlock monitoring in PostgreSQL**
+**Hands-on lab for deadlock monitoring in PostgreSQL**
 # **🔹 Hands-on Lab: Deadlock Monitoring in PostgreSQL**  
 
 This hands-on lab will teach you how to **monitor and analyze deadlocks in PostgreSQL** using system views and logs.
