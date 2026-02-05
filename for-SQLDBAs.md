@@ -1,5 +1,4 @@
-Great question 👌 — since you’re a SQL DBA, let’s go deep into **AutoVacuum vs ANALYZE in PostgreSQL** with DBA-level insights, tuning knobs, and real-world use cases.
-
+**AutoVacuum vs ANALYZE in PostgreSQL** 
 ---
 
 ## 🔹 Why PostgreSQL Needs AutoVacuum?
