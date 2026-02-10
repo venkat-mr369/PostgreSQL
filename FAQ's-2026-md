@@ -1,0 +1,12 @@
+comprehensive PostgreSQL DBA Clustering Interview Guide. 
+The document covers **7 sections** with 40+ questions and solutions:
+
+1. **Physical/Streaming Replication – Basic** (WAL, pg_basebackup, hot standby, replication status)
+2. **Physical/Streaming Replication – Intermediate/Advanced** (replication slots, cascading, pg_rewind, delayed standby)
+3. **Logical Replication – Basic to Advanced** (pub/sub, conflict resolution, bidirectional, CDC)
+4. **repmgr – Basic to Advanced** (setup, switchover/failover, repmgrd, witness server)
+5. **Patroni – Basic to Advanced** (etcd/DCS, patroni.yml, HAProxy integration, sync replication, tags)
+6. **Scenario-Based Questions** (10 real-world scenarios including split-brain, lag issues, etcd quorum loss, major version upgrades)
+7. **Troubleshooting & Issue-Based Questions** (WAL space, timeline mismatches, DCS failures, replay conflicts, monitoring best practices)
+
+Each question includes detailed answers with practical SQL/CLI commands where applicable.
