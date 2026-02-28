@@ -1,4 +1,4 @@
-Good question 👍 — **Two-Phase Locking (2PL)** is a fundamental **concurrency control method** in databases (including PostgreSQL transaction manager concepts).
+### **Two-Phase Locking (2PL)** is a fundamental **concurrency control method** in databases (including PostgreSQL transaction manager concepts).
 
 Let me explain it in **interview style with examples** 👇
 
