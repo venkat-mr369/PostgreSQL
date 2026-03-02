@@ -1,6 +1,6 @@
-## Introduction
+### Introduction
 
-Place for preparing documents on all types of clusters on **PostgreSQL** like
+preparing documents on all types of clusters on **PostgreSQL** like
 
 1, Patroni
 
