@@ -1,4 +1,4 @@
-# Oracle to PostgreSQL — Database Migration Guide
+### Oracle to PostgreSQL — Database Migration Guide
 
 **Schema Conversion | Data Validation | Cutover Planning**
 Three Migration Methods: EC2 PostgreSQL | Amazon RDS | Amazon Aurora
@@ -12,7 +12,7 @@ PostgreSQL Version 16 Target
 
 ---
 
-## Table of Contents
+### Table of Contents
 
 1. [Executive Overview](#1-executive-overview)
 2. [Pre-Migration Assessment (All Methods)](#2-pre-migration-assessment-all-methods)
@@ -27,7 +27,7 @@ PostgreSQL Version 16 Target
 
 ---
 
-## 1. Executive Overview
+### 1. Executive Overview
 
 This document provides a comprehensive, step-by-step migration guide for migrating 10 Oracle database schemas from an on-premises Oracle server (100.10.1.101) to PostgreSQL 16 across three distinct target architectures. Each method offers unique advantages and trade-offs in terms of operational overhead, scalability, availability, and cost.
 
@@ -48,7 +48,7 @@ This document provides a comprehensive, step-by-step migration guide for migrati
 
 ---
 
-## 2. Pre-Migration Assessment (All Methods)
+### 2. Pre-Migration Assessment (All Methods)
 
 Before starting migration for any method, conduct a thorough assessment of the source Oracle environment. This phase is identical across all three methods and is critical for identifying risks, incompatibilities, and sizing requirements.
 
@@ -126,7 +126,7 @@ AWS SCT is the primary tool used across all three methods for schema conversion.
 
 ---
 
-## 3. Method 1: Migration to EC2 PostgreSQL (Self-Managed)
+### 3. Method 1: Migration to EC2 PostgreSQL (Self-Managed)
 
 **Target:** EC2 instance at **10.11.12.9** running self-managed PostgreSQL 16. This method provides full OS-level access and maximum configuration flexibility but requires manual administration of backups, HA, patching, and monitoring.
 
@@ -479,7 +479,7 @@ aws rds create-db-cluster \
 
 ---
 
-## 6. Data Validation (All Methods)
+### 6. Data Validation (All Methods)
 
 Data validation is the most critical phase of any migration. It must be thorough, automated, and repeatable. The following validation framework applies to all three target methods.
 
@@ -667,7 +667,7 @@ After a successful stabilization period (recommended 7–30 days), decommission 
 
 ---
 
-## 9. Risk Register and Mitigation
+### 9. Risk Register and Mitigation
 
 | Risk | Impact | Mitigation | Owner |
 |---|---|---|---|
@@ -682,7 +682,7 @@ After a successful stabilization period (recommended 7–30 days), decommission 
 
 ---
 
-## Appendix A: Tool Versions and References
+### Appendix A: Tool Versions and References
 
 | Tool | Version | Purpose |
 |---|---|---|
