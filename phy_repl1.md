@@ -1,4 +1,3 @@
-Perfect 👍 Let’s make it consistent:
 
 * **Cluster superuser** = `postgres` (not `venkat`)
 * **Replication user** = `repuser` (instead of `replicator`)
@@ -10,13 +9,13 @@ That means:
 
 ---
 
-# 🚀 PostgreSQL 16 Streaming Replication (Oracle Linux 9.5)
+### 🚀 PostgreSQL 16 Streaming Replication (Oracle Linux 9.5)
 
 **Primary (vm01: 10.166.0.4)** ↔ **Standby (vm02: 10.166.0.5)**
 
 ---
 
-## **1. Pre-Requisites (On Both VMs)**
+### **1. Pre-Requisites (On Both VMs)**
 
 ### 1.1 Update System
 
@@ -47,7 +46,7 @@ sudo chown -R postgres:postgres /pgdata/16 /pgwal/16
 
 ---
 
-## **2. Initialize Primary (vm01: 10.166.0.4)**
+### **2. Initialize Primary (vm01: 10.166.0.4)**
 
 ### 2.1 Initdb
 
@@ -118,7 +117,7 @@ CREATE ROLE repuser WITH REPLICATION LOGIN PASSWORD 'StrongPass123';
 
 ---
 
-## **3. Setup Standby (vm02: 10.166.0.5)**
+### **3. Setup Standby (vm02: 10.166.0.5)**
 
 ### 3.1 Stop & Clean
 
@@ -159,7 +158,7 @@ primary_conninfo = 'user=repuser password=StrongPass123 host=10.166.0.4 port=543
 
 ---
 
-## **4. Verify Replication**
+### **4. Verify Replication**
 
 ### 4.1 On Primary
 
@@ -185,7 +184,7 @@ Should return:
 
 ---
 
-## **5. Test Replication**
+### **5. Test Replication**
 
 On Primary:
 
@@ -225,7 +224,7 @@ Should return:
 
 ---
 
-# ✅ Summary
+#### ✅ Summary
 
 * **Superuser** = `postgres`
 * **Replication user** = `repuser`
@@ -235,4 +234,3 @@ Should return:
 
 ---
 
-👉 Do you also want me to add the **systemd service override** so that both primary & standby auto-start PostgreSQL 16 as `postgres` on boot?
