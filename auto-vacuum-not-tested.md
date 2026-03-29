@@ -104,3 +104,204 @@ autovacuum = off
 ✅ **Tune AutoVacuum settings based on table size and update frequency**  
 ✅ **Monitor vacuum performance to optimize database health**  
 
+Good 👍 these are **core autovacuum tuning parameters**. I’ll explain in a practical DBA way (with your numbers).
+
+---
+
+# 🔥 Your Current Settings
+
+```text
+autovacuum_max_workers = 3
+autovacuum_naptime = 1min
+autovacuum_vacuum_threshold = 50
+autovacuum_vacuum_scale_factor = 0.2
+```
+
+---
+
+# ✅ 1. autovacuum_max_workers = 3
+
+👉 Max **3 autovacuum processes** can run at the same time
+
+### Meaning:
+
+* If you have many tables needing cleanup
+* Only 3 will be processed in parallel
+
+### DBA Insight:
+
+* Small DB → 3 is fine
+* Large DB → increase (5–10)
+
+---
+
+# ✅ 2. autovacuum_naptime = 1min
+
+👉 Autovacuum checks tables **every 1 minute**
+
+### Meaning:
+
+* Every minute → PostgreSQL wakes up and checks:
+  “Which tables need vacuum?”
+
+### Important:
+
+* It does NOT vacuum every table every minute
+* It only checks eligibility
+
+---
+
+# ✅ 3. autovacuum_vacuum_threshold = 50
+
+👉 Minimum **50 dead rows required**
+
+---
+
+# ✅ 4. autovacuum_vacuum_scale_factor = 0.2
+
+👉 20% of table rows
+
+---
+
+# 🔥 MOST IMPORTANT FORMULA
+
+Autovacuum triggers when:
+
+```text
+Dead Tuples > threshold + (scale_factor × total_rows)
+```
+
+---
+
+# 🔍 Example using your values
+
+### Suppose your table has:
+
+```text
+Total rows = 100,000
+```
+
+Then:
+
+```text
+Trigger = 50 + (0.2 × 100000)
+        = 50 + 20000
+        = 20050
+```
+
+👉 Autovacuum runs ONLY when:
+
+```text
+dead rows > 20050
+```
+
+---
+
+# ⚡ Another example (your current table)
+
+You had:
+
+```text
+~480,000 rows
+```
+
+So:
+
+```text
+Trigger = 50 + (0.2 × 480000)
+        = 50 + 96000
+        = 96050
+```
+
+👉 You must delete ~96K rows before autovacuum runs
+
+---
+
+# 🚨 Why this is important
+
+👉 If you delete:
+
+```text
+10K rows → NO autovacuum ❌
+50K rows → NO autovacuum ❌
+```
+
+👉 Only after ~96K → autovacuum runs ✅
+
+---
+
+# 🔥 Real DBA Problem
+
+Default scale factor (0.2) is **too high for large tables**
+
+👉 Leads to:
+
+* table bloat
+* slow queries
+* disk wastage
+
+---
+
+# ✅ Recommended tuning (production)
+
+For large tables:
+
+```sql
+ALTER TABLE test_load SET (
+  autovacuum_vacuum_scale_factor = 0.02,  -- 2%
+  autovacuum_vacuum_threshold = 1000
+);
+```
+
+---
+
+# 🔍 New trigger example
+
+```text
+Rows = 480000
+
+Trigger = 1000 + (0.02 × 480000)
+        = 1000 + 9600
+        = 10600
+```
+
+👉 Now vacuum runs MUCH earlier ✅
+
+---
+
+# 🚀 Summary (easy memory)
+
+| Parameter    | Meaning          |
+| ------------ | ---------------- |
+| max_workers  | parallel workers |
+| naptime      | check interval   |
+| threshold    | minimum rows     |
+| scale_factor | % of table       |
+
+---
+
+# 🔥 Interview Answer (must know)
+
+👉 *When does autovacuum trigger?*
+
+Answer:
+
+> When dead tuples exceed
+> `autovacuum_vacuum_threshold + autovacuum_vacuum_scale_factor × table_size`
+
+---
+
+# 🚀 Pro Tip
+
+Check which tables need vacuum:
+
+```sql
+SELECT relname, n_dead_tup
+FROM pg_stat_user_tables
+ORDER BY n_dead_tup DESC;
+```
+
+---
+
+
+
