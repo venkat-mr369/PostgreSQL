@@ -35,7 +35,7 @@ Both services run PostgreSQL-compatible databases managed by AWS, but they are f
 
 ---
 
-## 2. Amazon RDS for PostgreSQL
+### 2. Amazon RDS for PostgreSQL
 
 ### What It Is
 
@@ -52,7 +52,7 @@ RDS PostgreSQL is the **exact same PostgreSQL** you'd install on a Linux server 
 │   └──────────┬───────────┘   │
 │              │               │
 │   ┌──────────▼───────────┐   │
-│   │    EBS Storage        │   │
+│   │    EBS Storage       │   │
 │   │  (gp3/io1/io2)       │   │
 │   │  Max 64 TB           │   │
 │   └──────────────────────┘   │
@@ -101,26 +101,26 @@ Aurora PostgreSQL is **AWS's proprietary database engine** that speaks PostgreSQ
 
 ```
 ┌────────────────────────────────────────────────┐
-│              Aurora Cluster                      │
-│                                                  │
+│              Aurora Cluster                    │
+│                                                │
 │   ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│   │  Writer   │  │ Reader 1 │  │ Reader 2 │     │
-│   │ Instance  │  │ Instance │  │ Instance │     │
+│   │  Writer  │  │ Reader 1 │  │ Reader 2 │     │
+│   │ Instance │  │ Instance │  │ Instance │     │
 │   └─────┬────┘  └─────┬────┘  └─────┬────┘     │
-│         │              │              │          │
-│         └──────────────┼──────────────┘          │
-│                        │                         │
-│              ┌─────────▼──────────┐              │
-│              │  Shared Cluster    │              │
-│              │  Storage Volume    │              │
-│              │                    │              │
-│              │  6 copies across   │              │
-│              │  3 Availability    │              │
-│              │  Zones             │              │
-│              │                    │              │
-│              │  Auto-scales to    │              │
-│              │  128 TB            │              │
-│              └────────────────────┘              │
+│         │              │              │        │
+│         └──────────────┼──────────────┘        │
+│                        │                       │
+│              ┌─────────▼──────────┐            │
+│              │  Shared Cluster    │            │
+│              │  Storage Volume    │            │
+│              │                    │            │
+│              │  6 copies across   │            │
+│              │  3 Availability    │            │
+│              │  Zones             │            │
+│              │                    │            │
+│              │  Auto-scales to    │            │
+│              │  128 TB            │            │
+│              └────────────────────┘            │
 └────────────────────────────────────────────────┘
 ```
 
@@ -152,7 +152,7 @@ Aurora PostgreSQL is **AWS's proprietary database engine** that speaks PostgreSQ
 
 ---
 
-## 4. Architecture Comparison
+### 4. Architecture Comparison
 
 ### Storage Architecture
 
