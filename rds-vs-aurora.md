@@ -1,6 +1,6 @@
 ### Amazon RDS for PostgreSQL vs Amazon Aurora PostgreSQL — Complete Decision Guide
 
-**Author:** DBA Reference Guide
+**Author:** Y Venkata Sarath
 **Date:** March 2026
 
 ---
