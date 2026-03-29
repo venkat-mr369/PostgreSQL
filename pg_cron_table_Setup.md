@@ -1,4 +1,4 @@
-# PostgreSQL pg_cron — Complete Setup & Troubleshooting Guide
+### PostgreSQL pg_cron — Complete Setup & Troubleshooting Guide
 
 **Database:** `hrdb`
 **PostgreSQL Version:** 18
