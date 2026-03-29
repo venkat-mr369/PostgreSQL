@@ -7,7 +7,7 @@
 
 ---
 
-## 1. Create Test Table in `hrdb`
+### 1. Create Test Table in `hrdb`
 
 ```sql
 CREATE TABLE test_load (
@@ -19,7 +19,7 @@ CREATE TABLE test_load (
 
 ---
 
-## 2. Insert 1000 Records in One Shot
+### 2. Insert 1000 Records in One Shot
 
 PostgreSQL best way = `generate_series()`
 
@@ -33,7 +33,7 @@ This inserts 1000 records instantly.
 
 ---
 
-## 3. Automate Every 1 Minute
+### 3. Automate Every 1 Minute
 
 ### Option A: Using pg_cron (Best for DBA)
 
@@ -106,6 +106,13 @@ SELECT cron.schedule(
     $$INSERT INTO test_load (name)
       SELECT 'test_user'
       FROM generate_series(1,1000);$$
+);
+
+SELECT cron.schedule(
+    'insert_every_minute_1',
+    '* * * * *',
+    $$INSERT INTO test_load (name)
+      SELECT 'test_user_' || generate_series(1,1000) || '_' || to_char(now(),'HH24MISS');$$
 );
 ```
 
