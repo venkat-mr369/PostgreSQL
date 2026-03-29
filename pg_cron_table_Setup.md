@@ -105,7 +105,7 @@ SELECT cron.schedule(
     '* * * * *',
     $$INSERT INTO test_load (name)
       SELECT 'test_user'
-      FROM generate_series(1,1000);$$
+      FROM generate_series(1,9999);$$
 );
 
 SELECT cron.schedule(
