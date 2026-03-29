@@ -1,6 +1,6 @@
-## **MVCC (Multi-Version Concurrency Control) in PostgreSQL – Detailed Notes & SQL Queries**  
+### **MVCC (Multi-Version Concurrency Control) in PostgreSQL – Detailed Notes & SQL Queries**  
 
-## **📌 1. What is MVCC in PostgreSQL?**  
+### **📌 1. What is MVCC in PostgreSQL?**  
 **MVCC (Multi-Version Concurrency Control)** is a **concurrency control mechanism** that allows multiple transactions to access the database **without waiting for locks**. Instead of blocking other transactions, MVCC **creates multiple versions of a row** and ensures data consistency using transaction snapshots.  
 
 ### **🔹 Key Concepts of MVCC**
@@ -10,7 +10,7 @@
 
 ---
 
-## **📌 2. How Does MVCC Work in PostgreSQL?**
+### **📌 2. How Does MVCC Work in PostgreSQL?**
 When a transaction modifies data, PostgreSQL **doesn’t overwrite the original row** but instead:  
 1. **Creates a new version of the row (tuple)** with a new transaction ID.  
 2. **Marks the old row as "invisible" to newer transactions** while older transactions can still see it.  
@@ -55,7 +55,7 @@ Now, if **T2 re-runs the SELECT**, it will see the **updated salary (55000)**.
 
 ---
 
-## **📌 3. Key Data Structures in MVCC**
+### **📌 3. Key Data Structures in MVCC**
 MVCC relies on **system columns** stored internally in PostgreSQL.  
 
 | **Column** | **Description** |
