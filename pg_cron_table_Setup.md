@@ -112,7 +112,7 @@ SELECT cron.schedule(
     'insert_every_minute_1',
     '* * * * *',
     $$INSERT INTO test_load (name)
-      SELECT 'test_user_' || generate_series(1,1000) || '_' || to_char(now(),'HH24MISS');$$
+      SELECT 'test_user_' || generate_series(1,77777) || '_' || to_char(now(),'HH24MISS');$$
 );
 ```
 
