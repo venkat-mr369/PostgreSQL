@@ -1,4 +1,4 @@
-Perfect 👍 You want a **detailed guide to set up PostgreSQL 16 Streaming Replication** on **Oracle Linux Server 9.5**, using two VMs:
+**Detailed set up PostgreSQL 16 Streaming Replication** on **Oracle Linux Server 9.5**, using two VMs:
 
 * **Primary (vm01)** → `10.166.0.4`
 * **Standby (vm02)** → `10.166.0.5`
@@ -10,11 +10,11 @@ I’ll write this in **step-by-step format** (based on your GitHub installation 
 
 ---
 
-# 🚀 PostgreSQL 16 Streaming Replication on Oracle Linux 9.5
+### 🚀 PostgreSQL 16 Streaming Replication on Oracle Linux 9.5
 
 ---
 
-## **1. Pre-Requisites (On Both Servers vm01 & vm02)**
+### **1. Pre-Requisites (On Both Servers vm01 & vm02)**
 
 ### 1.1 Update System
 
@@ -84,7 +84,7 @@ Success. You can now start the database server using:
 ```
 ---
 
-## **2. Configure Primary (vm01: 10.166.0.4)**
+### **2. Configure Primary (vm01: 10.166.0.4)**
 
 ### 2.1 Edit `postgresql.conf`
 
@@ -159,7 +159,7 @@ CREATE ROLE replicator WITH REPLICATION LOGIN PASSWORD 'StrongPass123';
 
 ---
 
-## **3. Configure Standby (vm02: 10.166.0.5)**
+### **3. Configure Standby (vm02: 10.166.0.5)**
 
 ### 3.1 Stop PostgreSQL if running
 
@@ -224,7 +224,7 @@ Should return:
 
 ---
 
-## **5. Test Replication**
+### **5. Test Replication**
 
 On Primary (vm01):
 
@@ -254,7 +254,7 @@ Now `pg_is_in_recovery()` will return `f`.
 
 ---
 
-# ✅ Summary
+#### ✅ Summary
 
 * **vm01 (10.166.0.4)** = Primary with WAL archiving.
 * **vm02 (10.166.0.5)** = Standby via `pg_basebackup`.
@@ -263,4 +263,4 @@ Now `pg_is_in_recovery()` will return `f`.
 
 ---
 
-👉 Do you want me to also prepare a **systemd service file setup** (so that PostgreSQL auto-starts with `venkat` user on boot for both primary & standby)?
+
