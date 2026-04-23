@@ -52,8 +52,9 @@ mkdir -p /pg_backups
 sudo chown -R postgres:postgres /pg_data/
 sudo chown -R postgres:postgres /pg_backups/
 ```
+--output:-
 
-output:-
+```
 [venkat_gcp369@venkat-servr1 ~]$ sudo mkdir -p /pg_backups
 [venkat_gcp369@venkat-servr1 ~]$ sudo mkdir -p /pg_data
 [venkat_gcp369@venkat-servr1 ~]$ sudo chown -R postgres:postgres /pg_data/
