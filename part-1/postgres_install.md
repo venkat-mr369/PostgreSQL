@@ -74,7 +74,8 @@ wget https://ftp.postgresql.org/pub/source/v17.0/postgresql-17.0.tar.gz
 mkdir -p /pg_backups/software/v17_0_ver/
 cd /pg_backups/software/v17_0_ver/
 ```
-output:-
+---output:-
+
 ```bash
 [postgres@venkat-servr1 ~]$ mkdir -p /pg_backups/software/v17_0_ver/
 [postgres@venkat-servr1 ~]$ cd /pg_backups/software/v17_0_ver/
