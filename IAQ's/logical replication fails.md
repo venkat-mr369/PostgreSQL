@@ -51,7 +51,7 @@ When logical replication fails in PostgreSQL, fixing it requires a systematic ap
 
 ### 8. **Resource & System Checks**
 - Ensure adequate resources (CPU, memory, disk space).
-- Make sure `max_worker_processes` is not too low.[7]
+- Make sure `max_worker_processes` is not too low.
 
 ### 9. **Recreate Subscription/Slot (If Needed)**
 - If initial sync failed or slot is corrupted:
@@ -60,17 +60,17 @@ When logical replication fails in PostgreSQL, fixing it requires a systematic ap
   3. Recreate the subscription.[2][4]
 
 ### 10. **Post-Failure Cleanup**
-- After fixing, always confirm that replication slots are active, publications and subscriptions are working, and no disk space or log warnings remain.[5][11][1]
+- After fixing, always confirm that replication slots are active, publications and subscriptions are working, and no disk space or log warnings remain.
 
 #### **Summary Table: What to Check**
 
-| Check                         | What to Look for                                     | Fix/Action                                        |
+| Check                         | What to Look for                                    | Fix/Action                                        |
 |-------------------------------|-----------------------------------------------------|---------------------------------------------------|
-| Error logs                    | Specific replication errors                         | Investigate and resolve log messages[1][9]      |
-| Replication slot status       | Slot inactive or invalid                            | Drop/recreate slot as needed[4][3][2]            |
-| Configuration                 | Incorrect `wal_level`, slots, senders, feedback     | Adjust and restart DB[4][6][7]                    |
-| Network & Permissions         | Blocked port, insufficient user privileges          | Open ports, grant roles[8]                        |
-| Slot accumulation             | Excess WAL, inactive slots filling storage          | Drop unused slots immediately[5][3]               |
-| Subscription status           | Not enabled, wrong publication                      | Enable or correct subscription[3]                 |
-| Table schema/conflicts        | Constraints, missing PKs, row-level security        | Adjust schema or permissions[9][10]               |
+| Error logs                    | Specific replication errors                         | Investigate and resolve log messages              |
+| Replication slot status       | Slot inactive or invalid                            | Drop/recreate slot as needed                      |
+| Configuration                 | Incorrect `wal_level`, slots, senders, feedback     | Adjust and restart DB.                            |
+| Network & Permissions         | Blocked port, insufficient user privileges          | Open ports, grant roles.                          |
+| Slot accumulation             | Excess WAL, inactive slots filling storage          | Drop unused slots immediately                     |
+| Subscription status           | Not enabled, wrong publication                      | Enable or correct subscription                    |
+| Table schema/conflicts        | Constraints, missing PKs, row-level security        | Adjust schema or permissions                      |
 
