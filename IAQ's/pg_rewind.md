@@ -2,7 +2,7 @@
 
 ### 🐘 pg_rewind — Real Scenario (Interview Question)
 
-## 🧠 Situation
+### Situation
 
 ```text
 Primary (A)  →  Standby (B)
@@ -12,7 +12,7 @@ Everything working fine.
 
 ---
 
-## 🔥 Problem (Failover happened)
+### Problem (Failover happened)
 
 1. Primary A crashes ❌
 2. You promote standby B:
@@ -30,7 +30,7 @@ A = OLD PRIMARY (outdated ❌)
 
 ---
 
-## ❗ Now issue
+### ❗ Now issue
 
 When A comes back:
 
@@ -44,17 +44,17 @@ A timeline ≠ B timeline
 
 ---
 
-# 🎯 Solution → pg_rewind
+### 🎯 Solution → pg_rewind
 
 👉 We “rewind” A to match B
 
 ---
 
-# 🧪 Step-by-Step (Real Flow)
+### 🧪 Step-by-Step (Real Flow)
 
 ---
 
-## 🔹 Step 1: Stop OLD primary (A)
+### 🔹 Step 1: Stop OLD primary (A)
 
 👉 On OLD PRIMARY (A):
 
@@ -64,7 +64,7 @@ pg_ctl stop -D /var/lib/postgresql/data
 
 ---
 
-## 🔹 Step 2: Run pg_rewind
+### 🔹 Step 2: Run pg_rewind
 
 👉 On OLD PRIMARY (A):
 
@@ -76,7 +76,7 @@ pg_rewind \
 
 ---
 
-## 🧠 What pg_rewind does
+### What pg_rewind does
 
 👉 It:
 
@@ -90,7 +90,7 @@ Fast sync (minutes instead of hours)
 
 ---
 
-## 🔹 Step 3: Convert A to standby
+### 🔹 Step 3: Convert A to standby
 
 After rewind:
 
@@ -110,7 +110,7 @@ primary_conninfo='host=NEW_PRIMARY_B user=replicator password=replica123'
 
 ---
 
-## 🔹 Step 4: Start A
+### 🔹 Step 4: Start A
 
 ```bash
 pg_ctl start -D /var/lib/postgresql/data
@@ -118,7 +118,7 @@ pg_ctl start -D /var/lib/postgresql/data
 
 ---
 
-## 🔍 Step 5: Verify
+### 🔍 Step 5: Verify
 
 👉 On new primary (B):
 
@@ -134,7 +134,7 @@ state = streaming
 
 ---
 
-# 🧠 Visual Understanding
+## 🧠 Visual Understanding
 
 ```text
 Before failover:
@@ -150,7 +150,7 @@ B (Primary) → A (Standby again)
 
 ---
 
-# 🔥 Why not base backup?
+### 🔥 Why not base backup?
 
 | Method        | Time              |
 | ------------- | ----------------- |
@@ -159,7 +159,7 @@ B (Primary) → A (Standby again)
 
 ---
 
-# ⚠️ Requirements (very important)
+### ⚠️ Requirements (very important)
 
 pg_rewind works only if:
 
@@ -175,13 +175,13 @@ data_checksums = on
 
 ---
 
-# 🎯 Interview Answer (Perfect)
+### 🎯 Interview Answer (Perfect)
 
 👉 *“pg_rewind is used after failover to resynchronize an old primary with the new primary by copying only changed data blocks instead of taking a full base backup.”*
 
 ---
 
-# 💡 One-line memory trick
+#### 💡 One-line memory trick
 
 ```text
 Failover happened → timelines diverged → use pg_rewind
@@ -189,7 +189,7 @@ Failover happened → timelines diverged → use pg_rewind
 
 ---
 
-# 🔥 Bonus (real DBA tip)
+#### Bonus (real DBA tip)
 
 👉 If pg_rewind fails:
 
