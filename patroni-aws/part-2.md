@@ -83,9 +83,9 @@ sudo vi /etc/hosts
 Append:
 
 ```text
-10.10.1.11   pg1
-10.10.1.12   pg2
-10.10.1.13   pg3
+10.20.1.11   pg1
+10.20.1.12   pg2
+10.20.1.13   pg3
 ```
 
 Save and exit.
@@ -112,7 +112,7 @@ ping -c 3 pg1
 
 ---
 
-### Step 7 – Install Required Packages
+### Step 7 – Install Required Packages in all 3 Nodes
 
 ```bash
 sudo apt install -y \
@@ -124,10 +124,8 @@ unzip \
 zip \
 git \
 jq \
-tree \
 htop \
 software-properties-common \
-apt-transport-https \
 ca-certificates \
 gnupg \
 lsb-release
