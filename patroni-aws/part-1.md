@@ -180,7 +180,7 @@ aws ec2 describe-key-pairs --key-names patroni-key
 ```
 ---
 
-### Step 12 - Launch Three EC2 Instances
+### Step 12 - Launch Three EC2 Instances & Get the Ubuntu 24.04 AMI ID
 
 Use:
 
@@ -198,34 +198,150 @@ Name the instances:
 
 ---
 
-### Step 13 - Connect to the Nodes
+First, retrieve the latest Ubuntu 24.04 LTS AMI for your region (`ap-south-1`):
 
 ```bash
-ssh -i patroni-key.pem ubuntu@<PUBLIC_IP_OF_PG1>
+AMI_ID=$(aws ec2 describe-images \
+  --owners 099720109477 \
+  --filters \
+    "Name=name,Values=ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*" \
+    "Name=state,Values=available" \
+  --query "sort_by(Images,&CreationDate)[-1].ImageId" \
+  --output text)
+
+echo "$AMI_ID"
+```
+
+Example output:
+
+```text
+ami-07e5ce642bbc48c0d
+```
+Export AMI_ID
+```
+export AMI_ID=ami-07e5ce642bbc48c0d
+```
+```
+echo $AMI_ID
+```
+### Step 13 - Launch EC2 Instance pg1
+
+```bash
+aws ec2 run-instances \
+  --image-id ami-07e5ce642bbc48c0d \
+  --instance-type t3.small \
+  --key-name patroni-key \
+  --security-group-ids sg-003b987963418b914 \
+  --subnet-id subnet-090add89d781facac \
+  --private-ip-address 10.20.1.11 \
+  --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":30,"VolumeType":"gp3"}}]' \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=pg1}]'
+```
+
+---
+
+## Step 14 - Launch EC2 Instance pg2
+
+```bash
+aws ec2 run-instances \
+  --image-id ami-07e5ce642bbc48c0d \
+  --instance-type t3.small \
+  --key-name patroni-key \
+  --security-group-ids sg-003b987963418b914 \
+  --subnet-id subnet-090add89d781facac \
+  --private-ip-address 10.20.1.12 \
+  --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":30,"VolumeType":"gp3"}}]' \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=pg2}]'
+```
+
+---
+
+## Step 15 - Launch EC2 Instance pg3
+
+```bash
+aws ec2 run-instances \
+  --image-id $AMI_ID \
+  --instance-type t3.medium \
+  --key-name patroni-key \
+  --security-group-ids sg-003b987963418b914 \
+  --subnet-id subnet-090add89d781facac \
+  --private-ip-address 10.20.1.13 \
+  --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":30,"VolumeType":"gp3"}}]' \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=pg3}]'
+```
+
+---
+
+## Step 16 - Wait Until All Instances Are Running
+
+```bash
+aws ec2 wait instance-running --filters "Name=tag:Name,Values=pg1,pg2,pg3"
+```
+
+---
+
+## Step 17 - Verify the Instances
+
+```bash
+aws ec2 describe-instances \
+  --filters "Name=tag:Name,Values=pg1,pg2,pg3" \
+  --query 'Reservations[].Instances[].{
+      Name:Tags[?Key==`Name`]|[0].Value,
+      State:State.Name,
+      PrivateIP:PrivateIpAddress,
+      PublicIP:PublicIpAddress
+  }' \
+  --output table
+```
+
+Expected output:
+
+```text
+-----------------------------------------------------
+|                 DescribeInstances                 |
++------+--------------+------------------+----------+
+| Name |  PrivateIP   |    PublicIP      |  State   |
++------+--------------+------------------+----------+
+|  pg2 |  10.20.1.12  |  3.111.219.179   |  running |
+|  pg3 |  10.20.1.13  |  13.127.133.180  |  running |
+|  pg1 |  10.20.1.11  |  3.110.32.127    |  running |
++------+--------------+------------------+----------+
+
+```
+
+> **Note:** AWS assigns **private IP addresses dynamically** unless you explicitly request them. You should not assume they'll automatically be `10.20.1.11`, `10.20.1.12`, and `10.20.1.13`.
+
+If you want those exact IPs, use the `--private-ip-address` option when launching each instance.
+
+For example, for **pg1**:
+
+```bash
+--private-ip-address 10.20.1.11
+```
+
+For **pg2**:
+
+```bash
+--private-ip-address 10.20.1.12
+```
+
+For **pg3**:
+
+```bash
+--private-ip-address 10.20.1.13
+```
+
+---
+
+## Step 18 - Connect to Each Instance
+
+```bash
+ssh -i ~/.ssh/patroni-key.pem ubuntu@3.111.219.179
 ```
 
 Repeat for `pg2` and `pg3`.
 
 ---
 
-### Verify
 
-On each node, run:
 
-```bash
-hostname
-```
-
-```bash
-ip addr
-```
-
-```bash
-ping -c 3 <private_ip_of_other_node>
-```
-
-All three nodes should be able to communicate over their private IP addresses.
-
----
-
-In **Part 2**, we'll prepare the operating system by updating packages, setting hostnames, configuring `/etc/hosts`, disabling swap (if needed), tuning kernel parameters, and installing PostgreSQL 17 prerequisites before Patroni. This creates a solid foundation for the cluster.
