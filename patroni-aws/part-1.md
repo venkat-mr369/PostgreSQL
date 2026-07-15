@@ -125,7 +125,17 @@ SSH:
 aws ec2 authorize-security-group-ingress --group-id sg-003b987963418b914 --protocol tcp --port 22 --cidr 0.0.0.0/0
 ```
 
-PostgreSQL:
+```bash
+aws ec2 authorize-security-group-ingress --group-id sg-003b987963418b914 --ip-permissions '[
+    {
+      "IpProtocol":"icmp",
+      "FromPort":-1,
+      "ToPort":-1,
+      "IpRanges":[{"CidrIp":"10.20.0.0/16"}]
+    }
+  ]'
+```
+
 
 ```bash
 --SG_ID < --group-id sg-003b987963418b914 >
