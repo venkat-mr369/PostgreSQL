@@ -40,7 +40,7 @@ pip3 --version
 
 ---
 
-## Step 3 – Add PostgreSQL Repository
+### Step 3 – Add PostgreSQL Repository
 
 ```bash
 curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
@@ -77,7 +77,7 @@ psql --version
 
 ---
 
-## Step 5 – Stop PostgreSQL
+### Step 5 – Stop PostgreSQL
 
 Patroni manages PostgreSQL.
 
@@ -240,7 +240,7 @@ sudo mkdir -p /etc/patroni
 
 ---
 
-## Step 14 – Create PostgreSQL Data Directory
+### Step 14 – Create PostgreSQL Data Directory
 
 ```bash
 sudo mkdir -p /data/postgresql
@@ -256,7 +256,7 @@ sudo chmod 700 /data/postgresql
 
 ---
 
-## Step 15 – Verify PostgreSQL Binaries
+### Step 15 – Verify PostgreSQL Binaries
 
 ```bash
 which psql
@@ -274,7 +274,7 @@ Expected:
 
 ---
 
-## Step 16 – Verify initdb
+### Step 16 – Verify initdb
 
 ```bash
 /usr/lib/postgresql/17/bin/initdb --version
@@ -282,7 +282,7 @@ Expected:
 
 ---
 
-## Step 17 – Verify pg_basebackup
+### Step 17 – Verify pg_basebackup
 
 ```bash
 /usr/lib/postgresql/17/bin/pg_basebackup --version
@@ -290,7 +290,7 @@ Expected:
 
 ---
 
-## Step 18 – Verify etcd
+### Step 18 – Verify etcd
 
 ```bash
 etcd --version
@@ -302,7 +302,7 @@ etcdctl version
 
 ---
 
-## Step 19 – Verify Patroni
+### Step 19 – Verify Patroni
 
 ```bash
 source /opt/patroni/venv/bin/activate
@@ -322,7 +322,7 @@ deactivate
 
 ---
 
-## Step 20 – Verify Nothing Is Running
+### Step 20 – Verify Nothing Is Running
 
 ```bash
 ps -ef | grep postgres
@@ -336,7 +336,7 @@ Only the `grep` processes should appear.
 
 ---
 
-## Final Validation
+### Final Validation
 
 ```bash
 psql --version
@@ -360,7 +360,7 @@ pip3 --version
 
 ---
 
-## Expected Status
+### Expected Status
 
 | Component                 | Status               |
 | ------------------------- | -------------------- |
