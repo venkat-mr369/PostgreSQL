@@ -1,5 +1,3 @@
-Perfect. We'll build this as a real production lab. **Part 1** covers only the AWS infrastructure. We won't install PostgreSQL yet.
-
 ### Part 1 - AWS Infrastructure for a 3-Node Patroni PostgreSQL Cluster
 
 #### Architecture
@@ -14,9 +12,9 @@ VPC (10.10.0.0/16)
       --------------------------------
       |              |               |
       |              |               |
-   pg1            pg2             pg3
-10.10.1.11    10.10.1.12     10.10.1.13
- Ubuntu 24      Ubuntu 24       Ubuntu 24
+   pg1            pg2               pg3
+10.10.1.11    10.10.1.12        10.10.1.13
+ Ubuntu 24      Ubuntu 24        Ubuntu 24
  Patroni         Patroni          Patroni
  PostgreSQL      PostgreSQL       PostgreSQL
  etcd            etcd             etcd
@@ -27,14 +25,12 @@ VPC (10.10.0.0/16)
 AWS Console:
 
 * VPC Name: `patroni-vpc`
-* IPv4 CIDR: `10.10.0.0/16`
+* IPv4 CIDR: `10.20.0.0/16`
 
 AWS CLI:
 
 ```bash
-aws ec2 create-vpc \
-  --cidr-block 10.10.0.0/16 \
-  --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=patroni-vpc}]'
+aws ec2 create-vpc --cidr-block 10.20.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=patroni-vpc}]'
 ```
 
 ---
@@ -42,15 +38,11 @@ aws ec2 create-vpc \
 ### Step 2 - Enable DNS
 
 ```bash
-aws ec2 modify-vpc-attribute \
-  --vpc-id <VPC_ID> \
-  --enable-dns-support
+aws ec2 modify-vpc-attribute --vpc-id vpc-0b0103f5b17d027f0 --enable-dns-support
 ```
 
 ```bash
-aws ec2 modify-vpc-attribute \
-  --vpc-id <VPC_ID> \
-  --enable-dns-hostnames
+aws ec2 modify-vpc-attribute --vpc-id vpc-0b0103f5b17d027f0 --enable-dns-hostnames
 ```
 
 ---
@@ -58,16 +50,13 @@ aws ec2 modify-vpc-attribute \
 ### Step 3 - Create Internet Gateway
 
 ```bash
-aws ec2 create-internet-gateway \
-  --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=patroni-igw}]'
+aws ec2 create-internet-gateway --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=patroni-igw}]'
 ```
 
 Attach it:
 
 ```bash
-aws ec2 attach-internet-gateway \
-  --internet-gateway-id <IGW_ID> \
-  --vpc-id <VPC_ID>
+aws ec2 attach-internet-gateway --internet-gateway-id igw-049feb52b8748748c --vpc-id vpc-0b0103f5b17d027f0
 ```
 
 ---
@@ -75,11 +64,7 @@ aws ec2 attach-internet-gateway \
 ### Step 4 - Create Public Subnet
 
 ```bash
-aws ec2 create-subnet \
-  --vpc-id <VPC_ID> \
-  --cidr-block 10.10.1.0/24 \
-  --availability-zone ap-south-1a \
-  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=patroni-public-subnet}]'
+aws ec2 create-subnet --vpc-id vpc-0b0103f5b17d027f0 --cidr-block 10.20.1.0/24 --availability-zone ap-south-1a --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=patroni-public-subnet}]'
 ```
 
 ---
@@ -87,9 +72,7 @@ aws ec2 create-subnet \
 ### Step 5 - Enable Auto Assign Public IP
 
 ```bash
-aws ec2 modify-subnet-attribute \
-  --subnet-id <SUBNET_ID> \
-  --map-public-ip-on-launch
+aws ec2 modify-subnet-attribute --subnet-id subnet-090add89d781facac --map-public-ip-on-launch
 ```
 
 ---
@@ -97,9 +80,7 @@ aws ec2 modify-subnet-attribute \
 ### Step 6 - Create Route Table
 
 ```bash
-aws ec2 create-route-table \
-  --vpc-id <VPC_ID> \
-  --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=patroni-rt}]'
+aws ec2 create-route-table --vpc-id vpc-0b0103f5b17d027f0 --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=patroni-rt}]'
 ```
 
 ---
@@ -107,10 +88,7 @@ aws ec2 create-route-table \
 ### Step 7 - Add Internet Route
 
 ```bash
-aws ec2 create-route \
-  --route-table-id <ROUTE_TABLE_ID> \
-  --destination-cidr-block 0.0.0.0/0 \
-  --gateway-id <IGW_ID>
+aws ec2 create-route --route-table-id rtb-08c8dfe8d0bef3b33 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-049feb52b8748748c
 ```
 
 ---
@@ -118,9 +96,7 @@ aws ec2 create-route \
 ### Step 8 - Associate Route Table
 
 ```bash
-aws ec2 associate-route-table \
-  --route-table-id <ROUTE_TABLE_ID> \
-  --subnet-id <SUBNET_ID>
+aws ec2 associate-route-table --route-table-id rtb-08c8dfe8d0bef3b33 --subnet-id subnet-090add89d781facac
 ```
 
 ---
@@ -128,10 +104,7 @@ aws ec2 associate-route-table \
 ### Step 9 - Create Security Group
 
 ```bash
-aws ec2 create-security-group \
-  --group-name patroni-sg \
-  --description "Patroni Cluster Security Group" \
-  --vpc-id <VPC_ID>
+aws ec2 create-security-group --group-name patroni-sg --description "Patroni Cluster Security Group" --vpc-id vpc-0b0103f5b17d027f0
 ```
 
 ---
@@ -149,51 +122,33 @@ aws ec2 create-security-group \
 SSH:
 
 ```bash
-aws ec2 authorize-security-group-ingress \
-  --group-id <SG_ID> \
-  --protocol tcp \
-  --port 22 \
-  --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id sg-003b987963418b914 --protocol tcp --port 22 --cidr 0.0.0.0/0
 ```
 
 PostgreSQL:
 
 ```bash
-aws ec2 authorize-security-group-ingress \
-  --group-id <SG_ID> \
-  --protocol tcp \
-  --port 5432 \
-  --cidr 10.10.0.0/16
+--SG_ID < --group-id sg-003b987963418b914 >
+aws ec2 authorize-security-group-ingress --group-id sg-003b987963418b914 --protocol tcp --port 5432 --cidr 10.20.0.0/16
 ```
 
 etcd Client:
 
 ```bash
-aws ec2 authorize-security-group-ingress \
-  --group-id <SG_ID> \
-  --protocol tcp \
-  --port 2379 \
-  --cidr 10.10.0.0/16
+--SG_ID < --group-id sg-003b987963418b914 >
+aws ec2 authorize-security-group-ingress --group-id sg-003b987963418b914 --protocol tcp --port 2379 --cidr 10.20.0.0/16
 ```
 
 etcd Peer:
 
 ```bash
-aws ec2 authorize-security-group-ingress \
-  --group-id <SG_ID> \
-  --protocol tcp \
-  --port 2380 \
-  --cidr 10.10.0.0/16
+aws ec2 authorize-security-group-ingress --group-id sg-003b987963418b914 --protocol tcp --port 2380 --cidr 10.20.0.0/16
 ```
 
 Patroni REST API:
 
 ```bash
-aws ec2 authorize-security-group-ingress \
-  --group-id <SG_ID> \
-  --protocol tcp \
-  --port 8008 \
-  --cidr 10.10.0.0/16
+aws ec2 authorize-security-group-ingress --group-id sg-003b987963418b914  --protocol tcp --port 8008 --cidr 10.20.0.0/16
 ```
 
 ---
@@ -201,16 +156,28 @@ aws ec2 authorize-security-group-ingress \
 ### Step 11 - Create a Key Pair
 
 ```bash
-aws ec2 create-key-pair \
-  --key-name patroni-key \
-  --query 'KeyMaterial' \
-  --output text > patroni-key.pem
+aws ec2 create-key-pair --key-name patroni-key --query 'KeyMaterial' --output text > patroni-key.pem
 ```
 
 ```bash
 chmod 400 patroni-key.pem
 ```
-
+verify
+```
+ls -l ~/.ssh/patroni-key.pem
+```
+You should see something similar to:
+```
+-r-------- 1 venkat 197121 1675 Jul 15 patroni-key.pem
+```
+Then connect to your instance with:
+```
+ssh -i ~/.ssh/patroni-key.pem ubuntu@<PUBLIC_IP>
+```
+Verify the key pair exists in AWS
+```
+aws ec2 describe-key-pairs --key-names patroni-key
+```
 ---
 
 ### Step 12 - Launch Three EC2 Instances
