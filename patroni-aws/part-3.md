@@ -1,27 +1,51 @@
-Excellent. In **Part 3**, we'll install **PostgreSQL 17**, **Patroni**, and **etcd** on all three nodes. **Do not start PostgreSQL manually**—Patroni will manage it.
+### Part 3 – Install PostgreSQL 17, Patroni, and etcd (Run on pg1, pg2, and pg3)
 
-> Run the following commands on **pg1**, **pg2**, and **pg3**.
+> Execute all commands on **pg1**, **pg2**, and **pg3**.
 
 ---
 
-## Part 3 – Install PostgreSQL 17, etcd, and Patroni
-
-### Step 1 – Add the PostgreSQL GPG Key
+### Step 1 – Update Packages
 
 ```bash
-curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
-sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
+sudo apt update
+sudo apt upgrade -y
+```
+
+---
+
+### Step 2 – Install Required Packages
+
+```bash
+sudo apt install -y \
+curl \
+wget \
+vim \
+git \
+jq \
+net-tools \
+python3 \
+python3-pip \
+python3-venv \
+python3-psycopg2 \
+gnupg \
+ca-certificates
 ```
 
 Verify:
 
 ```bash
-ls -l /usr/share/keyrings/postgresql.gpg
+python3 --version
+pip3 --version
 ```
 
 ---
 
-### Step 2 – Add the PostgreSQL Repository
+## Step 3 – Add PostgreSQL Repository
+
+```bash
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
+sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
+```
 
 ```bash
 echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] \
@@ -29,10 +53,6 @@ http://apt.postgresql.org/pub/repos/apt \
 $(lsb_release -cs)-pgdg main" | \
 sudo tee /etc/apt/sources.list.d/pgdg.list
 ```
-
----
-
-### Step 3 – Update Package Index
 
 ```bash
 sudo apt update
@@ -55,40 +75,65 @@ Verify:
 psql --version
 ```
 
-Expected:
-
-```text
-psql (PostgreSQL) 17.x
-```
-
 ---
 
-### Step 5 – Stop the PostgreSQL Service
+## Step 5 – Stop PostgreSQL
+
+Patroni manages PostgreSQL.
 
 ```bash
 sudo systemctl stop postgresql
 ```
 
-Disable automatic startup:
-
 ```bash
 sudo systemctl disable postgresql
 ```
 
-Check:
+Verify:
 
 ```bash
 systemctl status postgresql
 ```
 
-Expected: **inactive (dead)**
+---
+
+### Step 6 – Download Official etcd
+
+Move to `/tmp`:
+
+```bash
+cd /tmp
+```
+
+Download the latest stable release (replace the version if you want a newer 3.5.x release):
+
+```bash
+ETCD_VERSION=v3.5.16
+```
+
+```bash
+wget https://github.com/etcd-io/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz
+```
+
+Extract:
+
+```bash
+tar -xzf etcd-${ETCD_VERSION}-linux-amd64.tar.gz
+```
 
 ---
 
-### Step 6 – Install etcd
+### Step 7 – Install etcd
 
 ```bash
-sudo apt install -y etcd
+cd etcd-${ETCD_VERSION}-linux-amd64
+```
+
+Copy binaries:
+
+```bash
+sudo cp etcd /usr/local/bin/
+sudo cp etcdctl /usr/local/bin/
 ```
 
 Verify:
@@ -97,42 +142,80 @@ Verify:
 etcd --version
 ```
 
----
-
-### Step 7 – Stop etcd (Configuration comes in Part 4)
-
 ```bash
-sudo systemctl stop etcd
-```
-
-```bash
-sudo systemctl disable etcd
+etcdctl version
 ```
 
 ---
 
-### Step 8 – Install Python and pip
+### Step 8 – Create etcd Directories
 
 ```bash
-sudo apt install -y python3 python3-pip python3-venv
-```
-
-Verify:
-
-```bash
-python3 --version
+sudo mkdir -p /etc/etcd
 ```
 
 ```bash
-pip3 --version
+sudo mkdir -p /var/lib/etcd
 ```
 
 ---
 
-### Step 9 – Install Patroni
+### Step 9 – Create etcd User
 
 ```bash
-sudo pip3 install patroni[etcd] psycopg[binary]
+sudo useradd --system --home /var/lib/etcd --shell /bin/false etcd
+```
+
+If it already exists:
+
+```bash
+id etcd
+```
+
+---
+
+### Step 10 – Set Ownership
+
+```bash
+sudo chown -R etcd:etcd /etc/etcd
+```
+
+```bash
+sudo chown -R etcd:etcd /var/lib/etcd
+```
+
+---
+
+### Step 11 – Create Python Virtual Environment
+
+```bash
+sudo mkdir -p /opt/patroni
+```
+
+```bash
+cd /opt/patroni
+```
+
+```bash
+sudo python3 -m venv venv
+```
+
+Activate:
+
+```bash
+source /opt/patroni/venv/bin/activate
+```
+
+---
+
+### Step 12 – Install Patroni
+
+```bash
+pip install --upgrade pip
+```
+
+```bash
+pip install patroni[etcd] psycopg[binary]
 ```
 
 Verify:
@@ -141,9 +224,15 @@ Verify:
 patroni --version
 ```
 
+Deactivate:
+
+```bash
+deactivate
+```
+
 ---
 
-### Step 10 – Create Patroni Configuration Directory
+### Step 13 – Create Patroni Directory
 
 ```bash
 sudo mkdir -p /etc/patroni
@@ -151,57 +240,33 @@ sudo mkdir -p /etc/patroni
 
 ---
 
-### Step 11 – Create PostgreSQL Data Directory
+## Step 14 – Create PostgreSQL Data Directory
 
 ```bash
 sudo mkdir -p /data/postgresql
 ```
 
-Change ownership:
-
 ```bash
-sudo chown -R postgres:postgres /data/postgresql
+sudo chown postgres:postgres /data/postgresql
 ```
-
-Permissions:
 
 ```bash
 sudo chmod 700 /data/postgresql
 ```
 
-Verify:
-
-```bash
-ls -ld /data/postgresql
-```
-
 ---
 
-### Step 12 – Create PostgreSQL Runtime Directory
+## Step 15 – Verify PostgreSQL Binaries
 
 ```bash
-sudo mkdir -p /var/run/postgresql
+which psql
 ```
-
-```bash
-sudo chown postgres:postgres /var/run/postgresql
-```
-
----
-
-### Step 13 – Verify PostgreSQL Binary Location
-
-```bash
-which postgres
-```
-
-If nothing is returned:
 
 ```bash
 find /usr/lib/postgresql -name postgres
 ```
 
-Typical output:
+Expected:
 
 ```text
 /usr/lib/postgresql/17/bin/postgres
@@ -209,7 +274,7 @@ Typical output:
 
 ---
 
-### Step 14 – Verify initdb
+## Step 16 – Verify initdb
 
 ```bash
 /usr/lib/postgresql/17/bin/initdb --version
@@ -217,7 +282,7 @@ Typical output:
 
 ---
 
-### Step 15 – Verify pg_basebackup
+## Step 17 – Verify pg_basebackup
 
 ```bash
 /usr/lib/postgresql/17/bin/pg_basebackup --version
@@ -225,60 +290,64 @@ Typical output:
 
 ---
 
-### Step 16 – Verify Patroni Installation
+## Step 18 – Verify etcd
+
+```bash
+etcd --version
+```
+
+```bash
+etcdctl version
+```
+
+---
+
+## Step 19 – Verify Patroni
+
+```bash
+source /opt/patroni/venv/bin/activate
+```
 
 ```bash
 patroni --version
 ```
 
 ```bash
-python3 -c "import patroni; print('Patroni Installed Successfully')"
+python -c "import patroni; print('Patroni Installed Successfully')"
+```
+
+```bash
+deactivate
 ```
 
 ---
 
-### Step 17 – Verify etcd
-
-```bash
-etcd --version
-```
-
----
-
-### Step 18 – Check Installed Packages
-
-```bash
-dpkg -l | grep postgresql
-```
-
-```bash
-dpkg -l | grep etcd
-```
-
----
-
-### Step 19 – Verify No PostgreSQL Is Running
+## Step 20 – Verify Nothing Is Running
 
 ```bash
 ps -ef | grep postgres
 ```
 
-Only the `grep` command should appear.
+```bash
+ps -ef | grep etcd
+```
+
+Only the `grep` processes should appear.
 
 ---
 
-### Step 20 – Final Validation
+## Final Validation
 
 ```bash
 psql --version
 ```
 
 ```bash
-patroni --version
+etcd --version
 ```
 
 ```bash
-etcd --version
+etcdctl version
 ```
 
 ```bash
@@ -289,26 +358,25 @@ python3 --version
 pip3 --version
 ```
 
-### Expected Status After Part 3
+---
 
-| Component               | Status               |
-| ----------------------- | -------------------- |
-| PostgreSQL 17           | ✅ Installed, stopped |
-| Patroni                 | ✅ Installed          |
-| etcd                    | ✅ Installed, stopped |
-| Data directory          | ✅ Created            |
-| Configuration directory | ✅ Created            |
+## Expected Status
+
+| Component                 | Status               |
+| ------------------------- | -------------------- |
+| PostgreSQL 17             | ✅ Installed, stopped |
+| Patroni                   | ✅ Installed          |
+| etcd                      | ✅ Installed          |
+| etcdctl                   | ✅ Installed          |
+| PostgreSQL Data Directory | ✅ Created            |
+| Patroni Config Directory  | ✅ Created            |
+| etcd Config Directory     | ✅ Created            |
 
 ---
 
-## Next: Part 4
+### Recommendation
 
-In Part 4, we'll configure the **3-node etcd cluster**, including:
+Here's a simpler version you can include in your guide:
 
-* `/etc/default/etcd` or `etcd.conf.yml` configuration
-* Initial cluster configuration for `pg1`, `pg2`, and `pg3`
-* Starting etcd on all nodes
-* Verifying cluster health with `etcdctl`
-* Troubleshooting etcd quorum issues
+> **Note:** For this lab, we will use the **official etcd binary downloaded from the etcd GitHub releases** instead of installing etcd from the Ubuntu package repository (`apt install etcd`). This ensures that everyone uses the same etcd version regardless of the Ubuntu release, making the installation and configuration consistent throughout the course. It also reflects how many production Patroni deployments are built, where administrators prefer the official etcd release for better compatibility and easier version management.
 
-This is the foundation Patroni uses for leader election and failover.
